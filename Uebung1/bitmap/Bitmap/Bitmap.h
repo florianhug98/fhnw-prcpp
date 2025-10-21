@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <memory>
 
-// Author: 
+// Author: Florian Hug
 
 ///////////////////////////////////////////////////////////////////////////////
 // https://en.wikipedia.org/wiki/BMP_file_format
@@ -17,10 +17,10 @@ constexpr uint16_t BitmapSignature = 'B' | ('M' << 8);
 #pragma pack(2)
 struct BitmapFileHeader {
 	uint16_t m_signature;
-	uint32_t m_fileSize;
+	uint32_t m_fileSize; // size in bytes
 	uint16_t m_reserved1;
 	uint16_t m_reserved2;
-	uint32_t m_offset;
+	uint32_t m_offset; // offset/starting address of image data
 };
 static_assert(sizeof(BitmapFileHeader) == 14);
 #pragma pack()
@@ -28,14 +28,14 @@ static_assert(sizeof(BitmapFileHeader) == 14);
 ///////////////////////////////////////////////////////////////////////////////
 struct BitmapInfoHeader {
 	uint32_t m_headerSize;
-	uint32_t m_width;
-	uint32_t m_height;
+	int32_t  m_width; // width in pixel
+	int32_t  m_height; // height in pixel
 	uint16_t m_colorPlanes;
-	uint16_t m_bpp;
+	uint16_t m_bpp; // bits per pixel
 	uint32_t m_compression;
 	uint32_t m_imageSize;
-	uint32_t m_horizontalRes;
-	uint32_t m_verticalRes;
+	int32_t  m_horizontalRes;
+	int32_t  m_verticalRes;
 	uint32_t m_colorsUsed;
 	uint32_t m_importantColors;
 };

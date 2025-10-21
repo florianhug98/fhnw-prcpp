@@ -4,7 +4,7 @@
 
 #include "Bitmap.h"
 
-// Author: 
+// Author: Florian Hug
 
 ///////////////////////////////////////////////////////////////////////////////
 // https://en.wikipedia.org/wiki/BMP_file_format
@@ -12,30 +12,51 @@
 ///////////////////////////////////////////////////////////////////////////////
 // prototype
 struct ARGB;
+struct RGB;
 
 ///////////////////////////////////////////////////////////////////////////////
 // TODO Aufgabe 3: Klasse RGB
 
+struct RGB {
+public:
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+
+    RGB() : r(0), g(0), b(0) {}
+
+    explicit RGB(const ARGB& argb);
+};
+
 static_assert(sizeof(RGB) == 24/8);
 
 ///////////////////////////////////////////////////////////////////////////////
-// TODO Aufgabe 3: Klasse ARGB
+
+struct ARGB {
+public:
+    uint8_t a;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+
+    ARGB() : a(255), r(0), g(0), b(0) {}
+	explicit ARGB(const RGB& rgb);
+};
 
 static_assert(sizeof(ARGB) == 32/8);
 
 ///////////////////////////////////////////////////////////////////////////////
-// TODO Aufgabe 3: RGB ctor
+RGB::RGB(const ARGB& argb) : r(argb.r), g(argb.g), b(argb.b) {}
 
 ///////////////////////////////////////////////////////////////////////////////
-// TODO Aufgabe 3: ARGB ctor
+ARGB::ARGB(const RGB& rgb) : a(255), r(rgb.r), g(rgb.g), b(rgb.b) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 /// <summary>
 /// Return image height in pixels
 /// </summary>
 uint32_t Bitmap::height() const {
-	// TODO Aufgabe 4: return number of image rows
-	return 0;
+	return static_cast<uint32_t>(std::abs(m_infoHeader.m_height));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,8 +65,14 @@ uint32_t Bitmap::height() const {
 /// </summary>
 /// <returns>number of bytes per image row</returns>
 uint32_t Bitmap::rowSize() const {
-	// TODO Aufgabe 4: compute and return row size (a multiple of 4)
-	return 0;
+
+	uint32_t width = static_cast<uint32_t>(std::abs(m_infoHeader.m_width));
+
+	// width in pixel * bytes per pixel
+	uint32_t rawBytes = width * (m_infoHeader.m_bpp / 8);
+	// pads so the size is a multiple of 4
+	uint32_t pad = (4 - (rawBytes % 4)) % 4;
+	return rawBytes + pad;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,8 +81,7 @@ uint32_t Bitmap::rowSize() const {
 /// </summary>
 /// <returns>image size in bytes</returns>
 uint32_t Bitmap::imageSize() const {
-	// TODO Aufgabe 4: compute and return image size
-	return 0;
+	return height() * rowSize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
