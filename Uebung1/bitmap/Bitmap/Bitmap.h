@@ -20,7 +20,7 @@ struct BitmapFileHeader {
 	uint32_t m_fileSize; // size in bytes
 	uint16_t m_reserved1;
 	uint16_t m_reserved2;
-	uint32_t m_offset; // offset/starting address of image data
+	uint32_t m_imageStart; // offset/starting address of image data
 };
 static_assert(sizeof(BitmapFileHeader) == 14);
 #pragma pack()

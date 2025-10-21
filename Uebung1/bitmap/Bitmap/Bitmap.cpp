@@ -123,9 +123,12 @@ bool Bitmap::read(std::string_view filename) {
 	// jump to image data
 	fs.seekg(m_fileHeader.m_imageStart);
 
-	// TODO Aufgabe 5: allocate image data
+	m_image = std::make_unique_for_overwrite<uint8_t[]>(imageSize());
 
-	// TODO Aufgabe 5: read image data
+	if (!fs.read(reinterpret_cast<char*>(m_image.get()), imageSize())) {
+		std::cerr << "Error reading image data" << std::endl;
+		return false;
+	}
 
 	return true;
 }
@@ -169,7 +172,10 @@ bool Bitmap::write(std::string_view filename) const {
 	// jump to image data
 	fs.seekp(m_fileHeader.m_imageStart);
 
-	// TODO Aufgabe 6: write image data
+	if (!fs.write(reinterpret_cast<const char*>(m_image.get()), imageSize())) {
+		std::cerr << "Error writing image data" << std::endl;
+		return false;
+	}
 
 	return true;
 }
