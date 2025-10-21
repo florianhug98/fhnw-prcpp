@@ -15,15 +15,13 @@ struct ARGB;
 struct RGB;
 
 ///////////////////////////////////////////////////////////////////////////////
-// TODO Aufgabe 3: Klasse RGB
-
 struct RGB {
 public:
     uint8_t r;
     uint8_t g;
     uint8_t b;
 
-    RGB() : r(0), g(0), b(0) {}
+    RGB(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
 
     explicit RGB(const ARGB& argb);
 };
@@ -39,7 +37,7 @@ public:
     uint8_t g;
     uint8_t b;
 
-    ARGB() : a(255), r(0), g(0), b(0) {}
+    ARGB(uint8_t r, uint8_t g, uint8_t b) : a(255), r(r), g(g), b(b) {}
 	explicit ARGB(const RGB& rgb);
 };
 
@@ -198,7 +196,13 @@ void Bitmap::invert() const {
 /// </summary>
 void Bitmap::verFlip() const {
 	if (m_image) {
-		// TODO Aufgabe 8
+		for (uint32_t i = 0; i < height() / 2; ++i) {
+			uint8_t* pRow1 = m_image.get() + i * rowSize();
+			uint8_t* pRow2 = m_image.get() + (height() - 1 - i) * rowSize();
+			for (uint32_t j = 0; j < rowSize(); ++j) {
+				std::swap(pRow1[j], pRow2[j]);
+			}
+		}
 	}
 }
 
@@ -208,7 +212,19 @@ void Bitmap::verFlip() const {
 /// </summary>
 void Bitmap::horFlip() const {
 	if (m_image) {
-		// TODO Aufgabe 9
+		uint32_t w = static_cast<uint32_t>(std::abs(m_infoHeader.m_width));
+		uint32_t bytesPerPixel = m_infoHeader.m_bpp / 8;
+		for (uint32_t y = 0; y < height(); ++y) {
+			uint8_t* pRow = m_image.get() + y * rowSize();
+			uint32_t wLast = w - 1;
+			for (uint32_t i = 0; i < w / 2; ++i) {
+				uint8_t* pPixel1 = pRow + i * bytesPerPixel;
+				uint8_t* pPixel2 = pRow + (wLast - i) * bytesPerPixel;
+				for (uint32_t b = 0; b < bytesPerPixel; ++b) {
+					std::swap(pPixel1[b], pPixel2[b]);
+				}
+			}
+		}
 	}
 }
 
@@ -220,9 +236,44 @@ void Bitmap::horFlip() const {
 Bitmap Bitmap::cvtToRGB() const {
 	Bitmap out{};
 
+	// if image is ARGB
 	if (m_image && m_infoHeader.m_bpp == 32) {
-		// TODO Aufgabe 10
+
+		out.m_fileHeader = m_fileHeader;
+		out.m_infoHeader = m_infoHeader;
+
+		// Adjust for RGB format
+		out.m_infoHeader.m_bpp = 24;
+		out.m_infoHeader.m_imageSize = out.imageSize();
+		out.m_fileHeader.m_fileSize = out.m_fileHeader.m_imageStart + out.m_infoHeader.m_imageSize;
+
+		out.m_image = std::make_unique_for_overwrite<uint8_t[]>(out.imageSize());
+
+		uint32_t w = static_cast<uint32_t>(std::abs(m_infoHeader.m_width));
+		uint32_t h = height();
+
+		std::cout << w << std::endl;
+		std::cout << rowSize() / 4 << std::endl;
+
+		for (uint32_t y = 0; y < h; ++y) {
+			const uint8_t* inRow = m_image.get() + y * rowSize();
+			uint8_t* outRow = out.m_image.get() + y * out.rowSize();
+
+			for (uint32_t x = 0; x < w; ++x) {
+				const uint8_t* inPixel = inRow + x * 4;
+				ARGB argb(inPixel[2], inPixel[1], inPixel[0]);
+
+				// Convert to RGB
+				RGB rgb(argb);
+
+				uint8_t* outPixel = outRow + x * 3;
+				outPixel[0] = rgb.b;
+				outPixel[1] = rgb.g;
+				outPixel[2] = rgb.r;
+			}
+		}
 	}
+
 	return out;
 }
 
@@ -234,8 +285,45 @@ Bitmap Bitmap::cvtToRGB() const {
 Bitmap Bitmap::cvtToARGB() const {
 	Bitmap out{};
 
+	// if image is RGB
 	if (m_image && m_infoHeader.m_bpp == 24) {
-		// TODO Aufgabe 10
+
+		out.m_fileHeader = m_fileHeader;
+		out.m_infoHeader = m_infoHeader;
+
+		// Adjust for ARGB format
+		out.m_infoHeader.m_bpp = 32;
+		out.m_infoHeader.m_imageSize = out.imageSize();
+		out.m_fileHeader.m_fileSize = out.m_fileHeader.m_imageStart + out.m_infoHeader.m_imageSize;
+
+		out.m_image = std::make_unique_for_overwrite<uint8_t[]>(out.imageSize());
+
+		uint32_t w = static_cast<uint32_t>(std::abs(m_infoHeader.m_width));
+
+		std::cout << w << std::endl;
+		std::cout << rowSize() / 3 << std::endl;
+
+		// iterate through rows
+		for (uint32_t y = 0; y < height(); ++y) {
+			const uint8_t* inRow = m_image.get() + y * rowSize();
+			uint8_t* outRow = out.m_image.get() + y * out.rowSize();
+
+			// iterate through pixels in given row
+			for (uint32_t x = 0; x < w; ++x) {
+				const uint8_t* inPixel = inRow + x * 3;
+				RGB rgb(inPixel[2], inPixel[1], inPixel[0]);
+
+				// Convert to ARGB
+				ARGB argb(rgb);
+
+				uint8_t* outPixel = outRow + x * 4;
+				outPixel[0] = argb.b;
+				outPixel[1] = argb.g;
+				outPixel[2] = argb.r;
+				outPixel[3] = argb.a;
+			}
+		}
 	}
+
 	return out;
 }
