@@ -186,7 +186,9 @@ bool Bitmap::write(std::string_view filename) const {
 /// </summary>
 void Bitmap::invert() const {
 	if (m_image) {
-		// TODO Aufgabe 7
+		for (uint32_t i = 0; i < imageSize(); ++i) {
+			m_image[i] = ~m_image[i];
+		}
 	}
 }
 
