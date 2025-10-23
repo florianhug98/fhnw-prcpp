@@ -7,4 +7,5 @@ add_executable(${PROJECT_NAME} main.cpp
         Point.h
         Person.h
         Person.cpp
+        PointPtr.h
 )

@@ -3,6 +3,8 @@
 #include "Person.h"
 #include <memory>
 
+#include "PointPtr.h"
+
 //v [in] parameter
 // by value für primitive Datentypen
 int byVal(int v) {
@@ -32,15 +34,40 @@ void divider() {
 int main() {
 
   {
-    array<int,4> numbers = {1,2,3,4};
-    int sum = 0;
+    Point p1(1, 2);
+    PointPtr pp(p1);
 
-    for (const int &n : numbers) {
-      sum += n;
-    }
-
-    cout << sum << endl;
+    cout << pp << endl;
   }
+  // {
+  //   Point p1(1,2);
+  //   Point p2(2,3);
+  //   Point p3 = p1 + p2;
+  //
+  //   cout << p3 << endl;
+  //   // cout << p3.operator+(3) << endl;
+  //   cout << p3 + 3 << endl; // implizite Umwandung zu Point - default Werte im Konstruktor
+  //   cout << 3 + p3 << endl;
+  //   cout << -p3 << endl;
+  //   cout << - -p3 << endl;
+  //
+  //   if (p3 == p2) {
+  //
+  //   }
+  //   cout << (p3 < p1) << endl;
+  //   cout << (p1 < p2) << endl;
+  // }
+
+  // {
+  //   array<int,4> numbers = {1,2,3,4};
+  //   int sum = 0;
+  //
+  //   for (const int &n : numbers) {
+  //     sum += n;
+  //   }
+  //
+  //   cout << sum << endl;
+  // }
 
   // {
   //   char s[] = "ABC";
