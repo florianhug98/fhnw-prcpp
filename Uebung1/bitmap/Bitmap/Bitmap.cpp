@@ -16,12 +16,11 @@ struct RGB;
 
 ///////////////////////////////////////////////////////////////////////////////
 struct RGB {
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
+  uint8_t m_b;
+  uint8_t m_g;
+  uint8_t m_r;
 
-  RGB(const uint8_t r, const uint8_t g, const uint8_t b) : r(r), g(g), b(b) {
-  }
+  RGB(const uint8_t b, const uint8_t g, const uint8_t r) : m_b(b), m_g(g), m_r(r) {}
 
   explicit RGB(const ARGB &argb);
 };
@@ -31,12 +30,12 @@ static_assert(sizeof(RGB) == 24 / 8);
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ARGB {
-  uint8_t a;
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
+  uint8_t m_b;
+  uint8_t m_g;
+  uint8_t m_r;
+  uint8_t m_a;
 
-  ARGB(const uint8_t r, const uint8_t g, const uint8_t b) : a(255), r(r), g(g), b(b) {
+  ARGB(const uint8_t b, const uint8_t g, const uint8_t r) : m_b(b), m_g(g), m_r(r), m_a(255) {
   }
   explicit ARGB(const RGB &rgb);
 };
@@ -44,11 +43,11 @@ struct ARGB {
 static_assert(sizeof(ARGB) == 32 / 8);
 
 ///////////////////////////////////////////////////////////////////////////////
-RGB::RGB(const ARGB &argb) : r(argb.r), g(argb.g), b(argb.b) {
+RGB::RGB(const ARGB &argb) : m_b(argb.m_b), m_g(argb.m_g), m_r(argb.m_r) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-ARGB::ARGB(const RGB &rgb) : a(255), r(rgb.r), g(rgb.g), b(rgb.b) {
+ARGB::ARGB(const RGB &rgb) : m_a(255), m_r(rgb.m_r), m_g(rgb.m_g), m_b(rgb.m_b) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +69,7 @@ uint32_t Bitmap::rowSize() const {
   // width in pixel * bytes per pixel
   const uint32_t rawBytes = width * (m_infoHeader.m_bpp / 8);
   // pads so the size is a multiple of 4
-  const uint32_t pad = (4 - (rawBytes % 4)) % 4;
+  const uint32_t pad = (4 - rawBytes % 4) % 4;
   return rawBytes + pad;
 }
 
@@ -221,9 +220,9 @@ void Bitmap::horFlip() const {
   if (m_image) {
     const auto w = static_cast<uint32_t>(std::abs(m_infoHeader.m_width));
     const uint32_t bytesPerPixel = m_infoHeader.m_bpp / 8;
-    for (uint32_t y = 0; y < height(); ++y) {
+    for (uint32_t j = 0; j < height(); ++j) {
       // pointer to start of row
-      uint8_t *pRow = m_image.get() + y * rowSize();
+      uint8_t *pRow = m_image.get() + j * rowSize();
       const uint32_t wLast = w - 1;
       for (uint32_t i = 0; i < w / 2; ++i) {
         // pointer to pixel in row
@@ -266,15 +265,15 @@ Bitmap Bitmap::cvtToRGB() const {
 
       for (uint32_t x = 0; x < w; ++x) {
         const uint8_t *pInPixel = pInRow + x * 4;
-        ARGB argb(pInPixel[2], pInPixel[1], pInPixel[0]);
+        ARGB argb(pInPixel[0], pInPixel[1], pInPixel[2]);
 
         // Convert to RGB
         const RGB rgb(argb);
 
         uint8_t *pOutPixel = pOutRow + x * 3;
-        pOutPixel[0] = rgb.b;
-        pOutPixel[1] = rgb.g;
-        pOutPixel[2] = rgb.r;
+        pOutPixel[0] = rgb.m_b;
+        pOutPixel[1] = rgb.m_g;
+        pOutPixel[2] = rgb.m_r;
       }
     }
   }
@@ -312,16 +311,16 @@ Bitmap Bitmap::cvtToARGB() const {
       // iterate through pixels in given row
       for (uint32_t x = 0; x < w; ++x) {
         const uint8_t *pInPixel = pInRow + x * 3;
-        RGB rgb(pInPixel[2], pInPixel[1], pInPixel[0]);
+        RGB rgb(pInPixel[0], pInPixel[1], pInPixel[2]);
 
         // Convert to ARGB
         const ARGB argb(rgb);
 
         uint8_t *pOutPixel = pOutRow + x * 4;
-        pOutPixel[0] = argb.b;
-        pOutPixel[1] = argb.g;
-        pOutPixel[2] = argb.r;
-        pOutPixel[3] = argb.a;
+        pOutPixel[0] = argb.m_b;
+        pOutPixel[1] = argb.m_g;
+        pOutPixel[2] = argb.m_r;
+        pOutPixel[3] = argb.m_a;
       }
     }
   }
