@@ -31,13 +31,23 @@ void divider() {
   cout << "--------------------------------" << endl;
 }
 
+struct Node {
+  std::string m_name;
+  std::shared_ptr<Node> m_nodes;
+
+  ~Node() {
+    cout << "delete: " << m_name << endl;
+  }
+};
+
 int main() {
 
   {
-    Point p1(1, 2);
-    PointPtr pp(p1);
+    Node a = Node("A");
+    Node b = Node("B");
+    Node c = Node("C");
+    Node d = Node("D");
 
-    cout << pp << endl;
   }
   // {
   //   Point p1(1,2);
