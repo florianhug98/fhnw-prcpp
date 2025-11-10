@@ -27,7 +27,7 @@ public:
 	/// Creates string view of a valid C-String. Throws an std::invalid_argument exception for an invalid string literal.
 	/// </summary>
 	/// <param name="s">zero terminated C-String</param>
-		constexpr explicit StringView(const char* s)
+		constexpr StringView(const char* s)
 		: m_data(s), m_size(s ? strLen(s) : throw std::invalid_argument("invalid string literal")) {}
 
 	
@@ -103,7 +103,18 @@ public:
 	/// </summary>
 	/// <param name="s">rhs string view</param>
 	/// <returns>weak total ordering</returns>
-	constexpr std::weak_ordering operator<=>(const StringView& s) const noexcept;
+	constexpr std::weak_ordering operator<=>(const StringView& s) const noexcept {
+		size_t min_len = m_size < s.m_size ? m_size : s.m_size;
+		for (size_t i = 0; i < min_len; ++i) {
+			if (m_data[i] < s.m_data[i]) {
+				return std::weak_ordering::less;
+			}
+			if (m_data[i] > s.m_data[i]) {
+				return std::weak_ordering::greater;
+			}
+		}
+		return m_size <=> s.m_size;
+	}
 
 	/// <summary>
 	/// Compares two string views.
