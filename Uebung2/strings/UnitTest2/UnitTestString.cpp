@@ -169,25 +169,25 @@ namespace UnitTest
 		ASSERT_EQ(4ull, s14.length());
 		ASSERT_EQ(20ull, s15.length());
 	}
-	// TEST_F(StringTest, Equals) {
-	// 	ASSERT_TRUE(s1 == s1);
-	// 	ASSERT_TRUE(s1 == s2);
-	// 	ASSERT_TRUE(s1 == s3);
-	// 	ASSERT_TRUE(s4 == s4);
-	// 	ASSERT_TRUE(s1 == s5);
-	// 	ASSERT_TRUE(String("ab") == s6);
-	// 	ASSERT_TRUE(s4 == s7);
-	// 	ASSERT_TRUE(s8 == s8);
-	// 	ASSERT_TRUE(s1 == s9);
-	// 	ASSERT_TRUE(String("123456789012345") == s10);
-	// 	ASSERT_TRUE(s8 == s11);
-	// 	ASSERT_TRUE(s1 == s12);
-	// 	ASSERT_TRUE(s2 == s13);
-	// 	ASSERT_TRUE(s4 == s14);
-	// 	ASSERT_TRUE(s8 == s15);
-	// 	ASSERT_FALSE(String("ABCD") == s4);
-	// 	ASSERT_FALSE(s4 == String("ABCD"));
-	// }
+	TEST_F(StringTest, Equals) {
+		ASSERT_TRUE(s1 == s1);
+		ASSERT_TRUE(s1 == s2);
+		ASSERT_TRUE(s1 == s3);
+		ASSERT_TRUE(s4 == s4);
+		ASSERT_TRUE(s1 == s5);
+		ASSERT_TRUE(String("ab") == s6);
+		ASSERT_TRUE(s4 == s7);
+		ASSERT_TRUE(s8 == s8);
+		ASSERT_TRUE(s1 == s9);
+		ASSERT_TRUE(String("123456789012345") == s10);
+		ASSERT_TRUE(s8 == s11);
+		ASSERT_TRUE(s1 == s12);
+		ASSERT_TRUE(s2 == s13);
+		ASSERT_TRUE(s4 == s14);
+		ASSERT_TRUE(s8 == s15);
+		ASSERT_FALSE(String("ABCD") == s4);
+		ASSERT_FALSE(s4 == String("ABCD"));
+	}
 	TEST_F(StringTest, CString) {
 		ASSERT_STREQ(s1.toCString(), s1.toCString());
 		ASSERT_STREQ(s1.toCString(), s2.toCString());
@@ -238,29 +238,29 @@ namespace UnitTest
 		ASSERT_THROW(s4.substring(s4.length() + 1, 0), out_of_range);
 		ASSERT_THROW(s8.substring(s8.length() + 1, 0), out_of_range);
 	}
-	// TEST_F(StringTest, Smaller) {
-	// 	ASSERT_TRUE(s1 < s4);
-	// 	ASSERT_FALSE(s4 < s1);
-	// 	ASSERT_TRUE(s1 < s8);
-	// 	ASSERT_FALSE(s8 < s1);
-	// 	ASSERT_TRUE(s8 < s4);
-	// 	ASSERT_FALSE(s4 < s8);
-	// 	ASSERT_TRUE(s4 < "abcda");
-	// 	ASSERT_TRUE(s4 < "abce");
-	// 	ASSERT_TRUE(s4 < "abd");
-	// 	ASSERT_TRUE(s4 < "ac");
-	// 	ASSERT_TRUE(s4 < "b");
-	// 	ASSERT_FALSE(s4 < "ABCD");
-	//
-	// 	ASSERT_FALSE(s2 < s1);
-	// 	ASSERT_FALSE(s1 < s2);
-	// 	ASSERT_FALSE(s5 < s1);
-	// 	ASSERT_FALSE(s1 < s5);
-	// 	ASSERT_FALSE(s9 < s1);
-	// 	ASSERT_FALSE(s1 < s9);
-	// 	ASSERT_FALSE(s8 < s11);
-	// 	ASSERT_TRUE(s10 < s11);
-	// }
+	TEST_F(StringTest, Smaller) {
+		ASSERT_TRUE(s1 < s4);
+		ASSERT_FALSE(s4 < s1);
+		ASSERT_TRUE(s1 < s8);
+		ASSERT_FALSE(s8 < s1);
+		ASSERT_TRUE(s8 < s4);
+		ASSERT_FALSE(s4 < s8);
+		ASSERT_TRUE(s4 < "abcda");
+		ASSERT_TRUE(s4 < "abce");
+		ASSERT_TRUE(s4 < "abd");
+		ASSERT_TRUE(s4 < "ac");
+		ASSERT_TRUE(s4 < "b");
+		ASSERT_FALSE(s4 < "ABCD");
+
+		ASSERT_FALSE(s2 < s1);
+		ASSERT_FALSE(s1 < s2);
+		ASSERT_FALSE(s5 < s1);
+		ASSERT_FALSE(s1 < s5);
+		ASSERT_FALSE(s9 < s1);
+		ASSERT_FALSE(s1 < s9);
+		ASSERT_FALSE(s8 < s11);
+		ASSERT_TRUE(s10 < s11);
+	}
 	TEST_F(StringTest, At) {
 		// reading
 		const String& s1c = static_cast<const String&>(s1);
@@ -314,114 +314,114 @@ namespace UnitTest
 		ASSERT_EQ('\0', s8[20]);
 		ASSERT_THROW(s15[-1], out_of_range);
 	}
-	// TEST_F(StringTest, AppendChar) {
-	// 	String s1c = s1 + 'X';
-	// 	ASSERT_STREQ("X", s1c.toCString());
-	// 	ASSERT_EQ(s1.length() + 1, s1c.length());
-	// 	ASSERT_EQ('\0', s1c[s1c.length()]);
-	// 	ASSERT_TRUE(s1c.capacity() > s1c.length());
-	//
-	// 	String s4c = s4 + 'X';
-	// 	ASSERT_STREQ("abcdX", s4c.toCString());
-	// 	ASSERT_EQ(s4.length() + 1, s4c.length());
-	// 	ASSERT_EQ('\0', s4c[s4c.length()]);
-	// 	ASSERT_TRUE(s4c.capacity() > s4c.length());
-	//
-	// 	String s8c = s8 + 'X';
-	// 	ASSERT_STREQ("12345678901234567890X", s8c.toCString());
-	// 	ASSERT_EQ(s8.length() + 1, s8c.length());
-	// 	ASSERT_EQ('\0', s8c[s8c.length()]);
-	// 	ASSERT_TRUE(s8c.capacity() > s8c.length());
-	//
-	// 	String s10c = s10 + 'X';
-	// 	ASSERT_STREQ("123456789012345X", s10c.toCString());
-	// 	ASSERT_EQ(s10.length() + 1, s10c.length());
-	// 	ASSERT_EQ('\0', s10c[s10c.length()]);
-	// 	ASSERT_TRUE(s10c.capacity() > s10c.length());
-	//
-	// 	s1 += 'X';
-	// 	ASSERT_STREQ("X", s1.toCString());
-	// 	ASSERT_EQ(s1c.length(), s1.length());
-	// 	ASSERT_EQ('\0', s1[s1.length()]);
-	// 	ASSERT_TRUE(s1.capacity() > s1.length());
-	//
-	// 	s4 += 'X';
-	// 	ASSERT_STREQ("abcdX", s4.toCString());
-	// 	ASSERT_EQ(s4c.length(), s4.length());
-	// 	ASSERT_EQ('\0', s4[s4.length()]);
-	// 	ASSERT_TRUE(s4.capacity() > s4.length());
-	//
-	// 	s8 += 'X';
-	// 	ASSERT_STREQ("12345678901234567890X", s8.toCString());
-	// 	ASSERT_EQ(s8c.length(), s8.length());
-	// 	ASSERT_EQ('\0', s8[s8.length()]);
-	// 	ASSERT_TRUE(s8.capacity() > s8.length());
-	//
-	// 	s10 += 'X';
-	// 	ASSERT_STREQ("123456789012345X", s10.toCString());
-	// 	ASSERT_EQ(s10c.length(), s10.length());
-	// 	ASSERT_EQ('\0', s10[s10.length()]);
-	// 	ASSERT_TRUE(s10.capacity() > s10.length());
-	// }
-	// TEST_F(StringTest, AppendString) {
-	// 	String s1c = s1 + "XYZ";
-	// 	ASSERT_STREQ("XYZ", s1c.toCString());
-	// 	ASSERT_EQ(s1.length() + 3, s1c.length());
-	// 	ASSERT_EQ('\0', s1c[s1c.length()]);
-	// 	ASSERT_TRUE(s1c.capacity() > s1c.length());
-	//
-	// 	String s4c = s4 + "XYZ";
-	// 	ASSERT_STREQ("abcdXYZ", s4c.toCString());
-	// 	ASSERT_EQ(s4.length() + 3, s4c.length());
-	// 	ASSERT_EQ('\0', s4c[s4c.length()]);
-	// 	ASSERT_TRUE(s4c.capacity() > s4c.length());
-	//
-	// 	String s8c = s8 + "XYZ";
-	// 	ASSERT_STREQ("12345678901234567890XYZ", s8c.toCString());
-	// 	ASSERT_EQ(s8.length() + 3, s8c.length());
-	// 	ASSERT_EQ('\0', s8c[s8c.length()]);
-	// 	ASSERT_TRUE(s8c.capacity() > s8c.length());
-	//
-	// 	String s10c = s10 + "XYZ";
-	// 	ASSERT_STREQ("123456789012345XYZ", s10c.toCString());
-	// 	ASSERT_EQ(s10.length() + 3, s10c.length());
-	// 	ASSERT_EQ('\0', s10c[s10c.length()]);
-	// 	ASSERT_TRUE(s10c.capacity() > s10c.length());
-	//
-	// 	String s14c = s4c + s10c;
-	// 	ASSERT_STREQ("abcdXYZ123456789012345XYZ", s14c.toCString());
-	// 	ASSERT_EQ(s4c.length() + s10c.length(), s14c.length());
-	// 	ASSERT_EQ('\0', s14c[s14c.length()]);
-	// 	ASSERT_TRUE(s14c.capacity() > s10c.length());
-	//
-	// 	s1 += "XYZ";
-	// 	ASSERT_STREQ("XYZ", s1.toCString());
-	// 	ASSERT_EQ(s1c.length(), s1.length());
-	// 	ASSERT_EQ('\0', s1[s1.length()]);
-	// 	ASSERT_TRUE(s1.capacity() > s1.length());
-	//
-	// 	s4 += "XYZ";
-	// 	ASSERT_STREQ("abcdXYZ", s4.toCString());
-	// 	ASSERT_EQ(s4c.length(), s4.length());
-	// 	ASSERT_EQ('\0', s4[s4.length()]);
-	// 	ASSERT_TRUE(s4.capacity() > s4.length());
-	//
-	// 	s8 += "XYZ";
-	// 	ASSERT_STREQ("12345678901234567890XYZ", s8.toCString());
-	// 	ASSERT_EQ(s8c.length(), s8.length());
-	// 	ASSERT_EQ('\0', s8[s8.length()]);
-	// 	ASSERT_TRUE(s8.capacity() > s8.length());
-	//
-	// 	s10 += "XYZ";
-	// 	ASSERT_STREQ("123456789012345XYZ", s10.toCString());
-	// 	ASSERT_EQ(s10c.length(), s10.length());
-	// 	ASSERT_EQ('\0', s10[s10.length()]);
-	// 	ASSERT_TRUE(s10.capacity() > s10.length());
-	//
-	// 	s4 += s10;
-	// 	ASSERT_STREQ("abcdXYZ123456789012345XYZ", s4.toCString());
-	// 	ASSERT_EQ(s4c.length() + s10.length(), s4.length());
-	// 	ASSERT_EQ('\0', s4[s4.length()]);
-	// 	ASSERT_TRUE(s4.capacity() > s10.length());
-	// }
+	TEST_F(StringTest, AppendChar) {
+		String s1c = s1 + 'X';
+		ASSERT_STREQ("X", s1c.toCString());
+		ASSERT_EQ(s1.length() + 1, s1c.length());
+		ASSERT_EQ('\0', s1c[s1c.length()]);
+		ASSERT_TRUE(s1c.capacity() > s1c.length());
+
+		String s4c = s4 + 'X';
+		ASSERT_STREQ("abcdX", s4c.toCString());
+		ASSERT_EQ(s4.length() + 1, s4c.length());
+		ASSERT_EQ('\0', s4c[s4c.length()]);
+		ASSERT_TRUE(s4c.capacity() > s4c.length());
+
+		String s8c = s8 + 'X';
+		ASSERT_STREQ("12345678901234567890X", s8c.toCString());
+		ASSERT_EQ(s8.length() + 1, s8c.length());
+		ASSERT_EQ('\0', s8c[s8c.length()]);
+		ASSERT_TRUE(s8c.capacity() > s8c.length());
+
+		String s10c = s10 + 'X';
+		ASSERT_STREQ("123456789012345X", s10c.toCString());
+		ASSERT_EQ(s10.length() + 1, s10c.length());
+		ASSERT_EQ('\0', s10c[s10c.length()]);
+		ASSERT_TRUE(s10c.capacity() > s10c.length());
+
+		s1 += 'X';
+		ASSERT_STREQ("X", s1.toCString());
+		ASSERT_EQ(s1c.length(), s1.length());
+		ASSERT_EQ('\0', s1[s1.length()]);
+		ASSERT_TRUE(s1.capacity() > s1.length());
+
+		s4 += 'X';
+		ASSERT_STREQ("abcdX", s4.toCString());
+		ASSERT_EQ(s4c.length(), s4.length());
+		ASSERT_EQ('\0', s4[s4.length()]);
+		ASSERT_TRUE(s4.capacity() > s4.length());
+
+		s8 += 'X';
+		ASSERT_STREQ("12345678901234567890X", s8.toCString());
+		ASSERT_EQ(s8c.length(), s8.length());
+		ASSERT_EQ('\0', s8[s8.length()]);
+		ASSERT_TRUE(s8.capacity() > s8.length());
+
+		s10 += 'X';
+		ASSERT_STREQ("123456789012345X", s10.toCString());
+		ASSERT_EQ(s10c.length(), s10.length());
+		ASSERT_EQ('\0', s10[s10.length()]);
+		ASSERT_TRUE(s10.capacity() > s10.length());
+	}
+	TEST_F(StringTest, AppendString) {
+		String s1c = s1 + "XYZ";
+		ASSERT_STREQ("XYZ", s1c.toCString());
+		ASSERT_EQ(s1.length() + 3, s1c.length());
+		ASSERT_EQ('\0', s1c[s1c.length()]);
+		ASSERT_TRUE(s1c.capacity() > s1c.length());
+
+		String s4c = s4 + "XYZ";
+		ASSERT_STREQ("abcdXYZ", s4c.toCString());
+		ASSERT_EQ(s4.length() + 3, s4c.length());
+		ASSERT_EQ('\0', s4c[s4c.length()]);
+		ASSERT_TRUE(s4c.capacity() > s4c.length());
+
+		String s8c = s8 + "XYZ";
+		ASSERT_STREQ("12345678901234567890XYZ", s8c.toCString());
+		ASSERT_EQ(s8.length() + 3, s8c.length());
+		ASSERT_EQ('\0', s8c[s8c.length()]);
+		ASSERT_TRUE(s8c.capacity() > s8c.length());
+
+		String s10c = s10 + "XYZ";
+		ASSERT_STREQ("123456789012345XYZ", s10c.toCString());
+		ASSERT_EQ(s10.length() + 3, s10c.length());
+		ASSERT_EQ('\0', s10c[s10c.length()]);
+		ASSERT_TRUE(s10c.capacity() > s10c.length());
+
+		String s14c = s4c + s10c;
+		ASSERT_STREQ("abcdXYZ123456789012345XYZ", s14c.toCString());
+		ASSERT_EQ(s4c.length() + s10c.length(), s14c.length());
+		ASSERT_EQ('\0', s14c[s14c.length()]);
+		ASSERT_TRUE(s14c.capacity() > s10c.length());
+
+		s1 += "XYZ";
+		ASSERT_STREQ("XYZ", s1.toCString());
+		ASSERT_EQ(s1c.length(), s1.length());
+		ASSERT_EQ('\0', s1[s1.length()]);
+		ASSERT_TRUE(s1.capacity() > s1.length());
+
+		s4 += "XYZ";
+		ASSERT_STREQ("abcdXYZ", s4.toCString());
+		ASSERT_EQ(s4c.length(), s4.length());
+		ASSERT_EQ('\0', s4[s4.length()]);
+		ASSERT_TRUE(s4.capacity() > s4.length());
+
+		s8 += "XYZ";
+		ASSERT_STREQ("12345678901234567890XYZ", s8.toCString());
+		ASSERT_EQ(s8c.length(), s8.length());
+		ASSERT_EQ('\0', s8[s8.length()]);
+		ASSERT_TRUE(s8.capacity() > s8.length());
+
+		s10 += "XYZ";
+		ASSERT_STREQ("123456789012345XYZ", s10.toCString());
+		ASSERT_EQ(s10c.length(), s10.length());
+		ASSERT_EQ('\0', s10[s10.length()]);
+		ASSERT_TRUE(s10.capacity() > s10.length());
+
+		s4 += s10;
+		ASSERT_STREQ("abcdXYZ123456789012345XYZ", s4.toCString());
+		ASSERT_EQ(s4c.length() + s10.length(), s4.length());
+		ASSERT_EQ('\0', s4[s4.length()]);
+		ASSERT_TRUE(s4.capacity() > s10.length());
+	}
 }

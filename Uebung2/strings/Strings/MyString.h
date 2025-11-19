@@ -170,12 +170,12 @@ public:
 		return os << s.begin();
 	}
 
-private:
-	/// <summary>
+private:/// <summary>
 	/// Ensures the specified capacity.
 	/// If a new array is allocated on heap, then the old array content is copied to the new array and
 	/// at least the first character of m_short is set to '\0'.
 	/// </summary>
 	/// <param name="capacity">new capacity</param>
 	void ensureCapacity(size_t capacity);
+
 };

@@ -107,19 +107,51 @@ char &String::operator[](size_t i) {
     return *(m_data.get() + i);
 }
 
-// String& String::operator+=(char c) noexcept {
-//
-// }
-//
-// String& String::operator+=(const String& s) noexcept {
-//
-// }
-//
-String String::operator+(char c) const noexcept {
+String& String::operator+=(char c) noexcept {
+    ensureCapacity(m_size + 2);
 
+    (*this)[m_size] = c;
+    m_size++;
+
+    (*this)[m_size] = '\0';
+
+    return *this;
+}
+
+String& String::operator+=(const String& s) noexcept {
+    ensureCapacity(m_size + s.m_size + 1);
+
+    for (int i = 0; i < s.m_size; ++i) {
+        (*this)[m_size] = s[i];
+        m_size++;
+    }
+
+    (*this)[m_size] = '\0';
+
+    return *this;
+}
+
+String String::operator+(char c) const noexcept {
+    String result(*this);
+    return result += c;
 }
 
 String String::operator+(const String& s) const noexcept {
+    String result(*this);
+    return result += s;
+}
+
+std::weak_ordering String::operator<=>(const String& s) const noexcept {
+    size_t min_len = m_size < s.m_size ? m_size : s.m_size;
+    for (size_t i = 0; i < min_len; ++i) {
+        if ((*this)[i] < s[i]) {
+            return std::weak_ordering::less;
+        }
+        if ((*this)[i] > s[i]) {
+            return std::weak_ordering::greater;
+        }
+    }
+    return m_size <=> s.m_size;
 }
 
 String String::substring(size_t beg, size_t end) const {
@@ -134,13 +166,24 @@ String String::substring(size_t beg, size_t end) const {
     return String(toCString() + beg, end - beg);
 }
 
-// void String::ensureCapacity(size_t capacity) {
-//     if (capacity <= m_capacity) {
-//         return;
-//     }
-//
-//
-// }
+void String::ensureCapacity(size_t capacity) {
+    if (capacity <= m_capacity) {
+        return;
+    }
+
+    auto buf = std::make_unique<char[]>(capacity);
+
+    for (int i = 0; i < m_size; ++i) {
+        buf[i] = (*this)[i];
+    }
+
+    if (!m_data) {
+        m_short[0] = '\0';
+    }
+
+    m_data = std::move(buf);
+    m_capacity = capacity;
+}
 
 
 
